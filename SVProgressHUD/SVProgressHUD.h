@@ -126,6 +126,7 @@ typedef void (^SVProgressHUDDismissCompletion)(void);
 
 + (void)popActivity; // decrease activity count, if activity count == 0 the HUD is dismissed
 + (void)dismiss;
++ (void)dismissImmediately;
 + (void)dismissWithCompletion:(SVProgressHUDDismissCompletion)completion;
 + (void)dismissWithDelay:(NSTimeInterval)delay;
 + (void)dismissWithDelay:(NSTimeInterval)delay completion:(SVProgressHUDDismissCompletion)completion;

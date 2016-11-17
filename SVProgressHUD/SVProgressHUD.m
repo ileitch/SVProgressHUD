@@ -72,7 +72,7 @@ static const CGFloat SVProgressHUDDefaultAnimationDuration = 0.15;
 - (void)showStatus:(NSString*)status;
 
 - (void)dismiss;
-- (void)dismissWithDelay:(NSTimeInterval)delay completion:(SVProgressHUDDismissCompletion)completion;
+- (void)dismissWithDelay:(NSTimeInterval)delay completion:(SVProgressHUDDismissCompletion)completion animated:(BOOL)animated;
 
 - (UIView*)indefiniteAnimatedView;
 - (SVProgressAnimatedView*)ringView;
@@ -302,6 +302,10 @@ static const CGFloat SVProgressHUDDefaultAnimationDuration = 0.15;
     [self dismissWithDelay:0.0 completion:nil];
 }
 
++ (void)dismissImmediately {
+    [[self sharedView] dismissWithDelay:0.0 completion:nil animated:NO];
+}
+
 + (void)dismissWithCompletion:(SVProgressHUDDismissCompletion)completion {
     [self dismissWithDelay:0.0 completion:completion];
 }
@@ -311,7 +315,7 @@ static const CGFloat SVProgressHUDDefaultAnimationDuration = 0.15;
 }
 
 + (void)dismissWithDelay:(NSTimeInterval)delay completion:(SVProgressHUDDismissCompletion)completion {
-    [[self sharedView] dismissWithDelay:delay completion:completion];
+    [[self sharedView] dismissWithDelay:delay completion:completion animated:YES];
 }
 
 
@@ -1024,10 +1028,10 @@ static const CGFloat SVProgressHUDDefaultAnimationDuration = 0.15;
 }
 
 - (void)dismiss {
-    [self dismissWithDelay:0.0 completion:nil];
+    [self dismissWithDelay:0.0 completion:nil animated:YES];
 }
 
-- (void)dismissWithDelay:(NSTimeInterval)delay completion:(SVProgressHUDDismissCompletion)completion {
+- (void)dismissWithDelay:(NSTimeInterval)delay completion:(SVProgressHUDDismissCompletion)completion animated:(BOOL)animated {
     __weak SVProgressHUD *weakSelf = self;
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         __strong SVProgressHUD *strongSelf = weakSelf;
@@ -1087,7 +1091,7 @@ static const CGFloat SVProgressHUDDefaultAnimationDuration = 0.15;
                 }
             };
             
-            if (strongSelf.fadeOutAnimationDuration > 0) {
+            if (animated && strongSelf.fadeOutAnimationDuration > 0) {
                 // Animate appearance
                 [UIView animateWithDuration:strongSelf.fadeOutAnimationDuration
                                       delay:delay
